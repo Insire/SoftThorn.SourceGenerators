@@ -1,0 +1,8 @@
+{
+    "profiles": {
+        "DebugRoslynComponent": {
+            "commandName": "DebugRoslynComponent",
+            "targetProject": "..\\SoftThorn.SourceGenerators.Console\\SoftThorn.SourceGenerators.Console.csproj"
+        }
+    }
+}
