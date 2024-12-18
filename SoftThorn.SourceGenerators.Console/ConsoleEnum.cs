@@ -1,4 +1,4 @@
-﻿namespace SoftThorn.SourceGenerators.Console
+namespace SoftThorn.SourceGenerators.Console
 {
     [GenerateDto]
     public enum ConsoleEnum

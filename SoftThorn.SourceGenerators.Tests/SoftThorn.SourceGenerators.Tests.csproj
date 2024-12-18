@@ -15,6 +15,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Verify.Xunit" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
@@ -23,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoftThorn.SourceGenerators.Console\SoftThorn.SourceGenerators.Console.csproj" />
     <ProjectReference Include="..\SoftThorn.SourceGenerators\SoftThorn.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 

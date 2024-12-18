@@ -1,16 +1,11 @@
 namespace SoftThorn.SourceGenerators
 {
-    public readonly struct EnumValue
+    public readonly struct EnumValue(string displayName, string value, string order)
     {
-        public readonly string DisplayName;
-        public readonly string Order;
-        public readonly string Value;
+        public readonly string DisplayName = displayName;
 
-        public EnumValue(string displayName,string value, string order)
-        {
-            DisplayName = displayName;
-            Value = value;
-            Order = order;
-        }
+        public readonly string Order = order;
+
+        public readonly string Value = value;
     }
 }

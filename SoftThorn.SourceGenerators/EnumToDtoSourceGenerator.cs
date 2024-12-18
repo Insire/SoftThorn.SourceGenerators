@@ -16,19 +16,20 @@ namespace SoftThorn.SourceGenerators
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
-                "EnumExtensionsAttribute.g.cs", SourceText.From(SourceGenerationHelper.Attribute, Encoding.UTF8)));
+                "GenerateDtoAttribute.g.cs", SourceText.From(SourceGenerationHelper.Attribute, Encoding.UTF8)));
 
             context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
-                "EnumExtensionsDto.g.cs", SourceText.From(SourceGenerationHelper.Dto, Encoding.UTF8)));
+                "EnumDto.g.cs", SourceText.From(SourceGenerationHelper.Dto, Encoding.UTF8)));
 
             context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
-                "EnumExtensionsBaseInterface.g.cs", SourceText.From(SourceGenerationHelper.BaseInterface, Encoding.UTF8)));
+                "BaseEnumServiceInterface.g.cs", SourceText.From(SourceGenerationHelper.BaseInterface, Encoding.UTF8)));
 
             context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
-                "EnumExtensionsBaseService.g.cs", SourceText.From(SourceGenerationHelper.BaseService, Encoding.UTF8)));
+                "BaseEnumService.g.cs", SourceText.From(SourceGenerationHelper.BaseService, Encoding.UTF8)));
 
             context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
-                "EnumExtensionsGenericService.g.cs", SourceText.From(SourceGenerationHelper.GenericInterface, Encoding.UTF8)));
+                "GenericEnumServiceInterface.g.cs", SourceText.From(SourceGenerationHelper.GenericInterface, Encoding.UTF8)));
+
 
             var enumDeclarations = context.SyntaxProvider
                 .CreateSyntaxProvider(
@@ -36,7 +37,7 @@ namespace SoftThorn.SourceGenerators
                     transform: static (ctx, _) => GetSemanticTargetForGeneration(ctx))
                 .Where(static m => m is not null)!;
 
-            IncrementalValueProvider<(Compilation, ImmutableArray<EnumDeclarationSyntax>)> compilationAndEnums
+            IncrementalValueProvider<(Compilation, ImmutableArray<EnumDeclarationSyntax?>)> compilationAndEnums
                 = context.CompilationProvider.Combine(enumDeclarations.Collect());
 
             context.RegisterSourceOutput(compilationAndEnums,
@@ -78,7 +79,7 @@ namespace SoftThorn.SourceGenerators
             return null;
         }
 
-        private static void Execute(Compilation compilation, ImmutableArray<EnumDeclarationSyntax> enums, SourceProductionContext context)
+        private static void Execute(Compilation compilation, ImmutableArray<EnumDeclarationSyntax?> enums, SourceProductionContext context)
         {
             if (enums.IsDefaultOrEmpty)
             {
@@ -97,12 +98,12 @@ namespace SoftThorn.SourceGenerators
             if (enumsToGenerate.Count > 0)
             {
                 // generate the source code and add it to the output
-                var result = SourceGenerationHelper.GenerateEnumServicClass(enumsToGenerate);
-                context.AddSource("EnumExtensions.g.cs", SourceText.From(result, Encoding.UTF8));
+                var result = SourceGenerationHelper.GenerateEnumServiceClass(enumsToGenerate);
+                context.AddSource("EnumServices.g.cs", SourceText.From(result, Encoding.UTF8));
             }
         }
 
-        private static List<EnumToGenerate> GetTypesToGenerate(Compilation compilation, IEnumerable<EnumDeclarationSyntax> enums, CancellationToken ct)
+        private static List<EnumToGenerate> GetTypesToGenerate(Compilation compilation, IEnumerable<EnumDeclarationSyntax?> enums, CancellationToken ct)
         {
             var enumsToGenerate = new List<EnumToGenerate>();
             var enumAttribute = compilation.GetTypeByMetadataName(EnumExtensionsAttribute);
@@ -116,6 +117,11 @@ namespace SoftThorn.SourceGenerators
             {
                 // stop if we're asked to
                 ct.ThrowIfCancellationRequested();
+
+                if(enumDeclarationSyntax is null)
+                {
+                    continue;
+                }
 
                 var semanticModel = compilation.GetSemanticModel(enumDeclarationSyntax.SyntaxTree);
                 if (semanticModel.GetDeclaredSymbol(enumDeclarationSyntax) is not INamedTypeSymbol enumSymbol)

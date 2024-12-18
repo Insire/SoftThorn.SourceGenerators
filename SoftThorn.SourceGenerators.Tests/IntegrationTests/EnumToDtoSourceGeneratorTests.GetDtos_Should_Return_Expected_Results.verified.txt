@@ -1,0 +1,17 @@
+﻿[
+  {
+    Id: 2,
+    DisplayName: None,
+    Order: 1
+  },
+  {
+    Id: 3,
+    DisplayName: One,
+    Order: 2
+  },
+  {
+    Id: 4,
+    DisplayName: Two,
+    Order: 3
+  }
+]

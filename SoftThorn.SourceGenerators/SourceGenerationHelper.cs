@@ -4,53 +4,62 @@ namespace SoftThorn.SourceGenerators
 {
     public static class SourceGenerationHelper
     {
-        public const string Attribute = @"
-namespace SoftThorn.SourceGenerators
-{
-    [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false)]
-    public sealed class GenerateDtoAttribute : Attribute;
-}";
+        public const string Attribute = """
 
-        public const string Dto = @"
-namespace SoftThorn.SourceGenerators
-{
-    public readonly record struct EnumDto
-    {
-        required public int Id { get; init; }
+                                        namespace SoftThorn.SourceGenerators
+                                        {
+                                            [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false)]
+                                            public sealed class GenerateDtoAttribute : Attribute;
+                                        }
+                                        """;
 
-        required public string DisplayName { get; init; }
 
-        required public int Order { get; init; }
-    }
-}";
+        public const string Dto = """
 
-        public const string BaseInterface = @"
-namespace SoftThorn.SourceGenerators
-{
-    public interface IEnumService
-    {
-        IEnumerable<EnumDto> GetDtos();
-    }
-}";
+                                  namespace SoftThorn.SourceGenerators
+                                  {
+                                      public readonly record struct EnumDto
+                                      {
+                                          required public int Id { get; init; }
 
-        public const string GenericInterface = @"
-namespace SoftThorn.SourceGenerators
-{
-    public interface IEnumService<TEnum> : IEnumService
-    {
-    }
-}";
+                                          required public string DisplayName { get; init; }
 
-        public const string BaseService = @"
-namespace SoftThorn.SourceGenerators
-{
-    public abstract class EnumBaseService : IEnumService
-    {
-        public abstract IEnumerable<EnumDto> GetDtos();
-    }
-}";
+                                          required public int Order { get; init; }
+                                      }
+                                  }
+                                  """;
 
-        public static string GenerateEnumServicClass(List<EnumToGenerate> enumsToGenerate)
+        public const string BaseInterface = """
+
+                                            namespace SoftThorn.SourceGenerators
+                                            {
+                                                public interface IEnumService
+                                                {
+                                                    IEnumerable<EnumDto> GetDtos();
+                                                }
+                                            }
+                                            """;
+
+        public const string GenericInterface = """
+
+                                               namespace SoftThorn.SourceGenerators
+                                               {
+                                                   public interface IEnumService<TEnum> : IEnumService;
+                                               }
+                                               """;
+
+        public const string BaseService = """
+
+                                          namespace SoftThorn.SourceGenerators
+                                          {
+                                              public abstract class EnumBaseService : IEnumService
+                                              {
+                                                  public abstract IEnumerable<EnumDto> GetDtos();
+                                              }
+                                          }
+                                          """;
+
+        public static string GenerateEnumServiceClass(List<EnumToGenerate> enumsToGenerate)
         {
             var sb = new StringBuilder();
 
