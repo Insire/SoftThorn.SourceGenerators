@@ -4,7 +4,7 @@ namespace SoftThorn.SourceGenerators.Console
     {
         public static void Main(string[] args)
         {
-            var service = new ConsoleEnumService();
+            var service = new ConsoleEnumEnumService();
             foreach (var value in service.GetDtos())
             {
                 System.Console.WriteLine(value);

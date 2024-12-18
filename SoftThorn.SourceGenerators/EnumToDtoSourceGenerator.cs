@@ -7,7 +7,10 @@ using System.Text;
 
 namespace SoftThorn.SourceGenerators
 {
-    [Generator]
+    /// <summary>
+    /// A source generator for the <c>GenerateDtoAttribute</c> type.
+    /// </summary>
+    [Generator(LanguageNames.CSharp)]
     public class EnumToDtoSourceGenerator : IIncrementalGenerator
     {
         private const string EnumExtensionsAttribute = "SoftThorn.SourceGenerators.GenerateDtoAttribute";
@@ -25,11 +28,7 @@ namespace SoftThorn.SourceGenerators
                 "BaseEnumServiceInterface.g.cs", SourceText.From(SourceGenerationHelper.BaseInterface, Encoding.UTF8)));
 
             context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
-                "BaseEnumService.g.cs", SourceText.From(SourceGenerationHelper.BaseService, Encoding.UTF8)));
-
-            context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
                 "GenericEnumServiceInterface.g.cs", SourceText.From(SourceGenerationHelper.GenericInterface, Encoding.UTF8)));
-
 
             var enumDeclarations = context.SyntaxProvider
                 .CreateSyntaxProvider(
@@ -118,7 +117,7 @@ namespace SoftThorn.SourceGenerators
                 // stop if we're asked to
                 ct.ThrowIfCancellationRequested();
 
-                if(enumDeclarationSyntax is null)
+                if (enumDeclarationSyntax is null)
                 {
                     continue;
                 }
@@ -146,18 +145,22 @@ namespace SoftThorn.SourceGenerators
                         else
                         {
                             var attribute = attributes[0];
-                            if(attribute.AttributeClass?.ToDisplayString() == DisplayAttribute)
+                            if (attribute.AttributeClass?.ToDisplayString() == DisplayAttribute)
                             {
                                 var dictionary = attribute.NamedArguments.ToDictionary(p => p.Key, p => p.Value);
 
                                 var name = member.Name;
-                                if(dictionary.TryGetValue("Name", out  var typedConstant ))
+                                if (dictionary.TryGetValue("Name", out var typedConstant))
                                 {
                                     name = typedConstant.ToCSharpString();
                                 }
+                                else
+                                {
+                                    name = $"\"{name}\"";
+                                }
 
                                 var order = "0";
-                                if (dictionary.TryGetValue("Order", out  typedConstant))
+                                if (dictionary.TryGetValue("Order", out typedConstant))
                                 {
                                     order = typedConstant.ToCSharpString();
                                 }
