@@ -72,7 +72,9 @@ namespace SoftThorn.SourceGenerators
         {");
                 if (enumToGenerate.Values.Count == 0)
                 {
-                    sb.Append("yield break;");
+                    sb.Append(@"
+            yield break;
+");
                 }
                 else
                 {
